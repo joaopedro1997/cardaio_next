@@ -4,19 +4,33 @@ import { categories } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { redirect, notFound } from "next/navigation";
 import CategoryForm from "../../_components/CategoryForm";
-import { updateCategory } from "../../actions";
+import { createCategory, updateCategory } from "../../actions";
 
 type Props = {
     params: Promise<{ id: string }>
 }
 
-export default async function EditCategoryPage({ params }: Props) {
+export default async function CategoryPage({ params }: Props) {
     const user = await getUser();
     if (!user || !user.organizationId) {
         redirect('/onboarding');
     }
     
     const { id } = await params;
+
+    // Create Mode
+    if (id === 'new') {
+        return (
+            <div>
+                <div className="mb-6">
+                    <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Nova Categoria</h1>
+                </div>
+                <CategoryForm action={createCategory} />
+            </div>
+        );
+    }
+    
+    // Edit Mode
     const categoryId = parseInt(id);
 
     if (isNaN(categoryId)) {
@@ -43,4 +57,3 @@ export default async function EditCategoryPage({ params }: Props) {
         </div>
     );
 }
-

@@ -21,7 +21,7 @@ export default async function CategoriesPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Categorias</h1>
-        <Link href="/categories/create" className="px-4 py-2 text-white bg-brand-500 rounded-lg hover:bg-brand-600">
+        <Link href="/categories/new/edit" className="px-4 py-2 text-white bg-brand-500 rounded-lg hover:bg-brand-600">
             Nova Categoria
         </Link>
       </div>
