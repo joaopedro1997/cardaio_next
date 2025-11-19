@@ -1,0 +1,1 @@
+ALTER TABLE "organization" ADD COLUMN "user_id" uuid;
