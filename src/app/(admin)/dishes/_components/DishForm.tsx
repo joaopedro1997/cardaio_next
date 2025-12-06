@@ -2,6 +2,7 @@
 
 import React, { useActionState, useState, useEffect } from "react";
 import { createDish } from "../actions";
+import Link from "next/link";
 import Button from "@/components/ui/button/Button";
 import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
@@ -126,9 +127,17 @@ export default function DishForm({ categories, initialData, action = createDish 
                     <input type="hidden" name="active" value={isActive ? "on" : "off"} />
                 </div>
 
-                <Button className="w-full" disabled={isPending}>
-                    {isPending ? "Salvando..." : initialData ? "Atualizar Prato" : "Salvar Prato"}
-                </Button>
+                <div className="flex items-center justify-end gap-3 mt-4">
+                    <Link
+                        href="/dishes"
+                        className="px-3 py-2 justify-center flex items-center text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700"
+                    >
+                        Cancelar
+                    </Link>
+                    <Button disabled={isPending} size="xs">
+                        {isPending ? "Salvando..." : initialData ? "Atualizar Prato" : "Salvar Prato"}
+                    </Button>
+                </div>
             </div>
         </form>
     );
