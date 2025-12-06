@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
+import QRCode from "react-qr-code";
 import {
   BoxCubeIcon,
   CalenderIcon,
@@ -241,7 +242,7 @@ const AppSidebar: React.FC = () => {
           )}
         </Link>
       </div>
-      <div className="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
+      <div className="flex flex-col flex-1 overflow-y-auto duration-300 ease-linear no-scrollbar">
         <nav className="mb-6">
           <div className="flex flex-col gap-4">
             <div>
@@ -265,7 +266,25 @@ const AppSidebar: React.FC = () => {
         </nav>
 
       </div>
-    </aside>
+
+      {
+        (isExpanded || isHovered || isMobileOpen) && (
+          <div className="p-6 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center justify-center gap-3">
+            <div className="p-2 bg-white rounded-lg">
+              <QRCode
+                size={100}
+                style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                value={typeof window !== "undefined" ? window.location.origin : ""}
+                viewBox={`0 0 256 256`}
+              />
+            </div>
+            <p className="text-xs text-gray-500 text-center font-medium">
+              Acesse seu cardápio
+            </p>
+          </div>
+        )
+      }
+    </aside >
   );
 };
 
