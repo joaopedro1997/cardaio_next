@@ -15,7 +15,7 @@ export default async function AdminLayout({
 }) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-console.log({user});
+  console.log({ user });
   if (!user) {
     redirect("/signin");
   }
@@ -24,11 +24,11 @@ console.log({user});
   const dbUser = await db.query.users.findFirst({
     where: eq(users.authId, user.id),
   });
-console.log(dbUser);
+  console.log(dbUser);
   // If user doesn't exist in DB (should have been created on auth) or has no organization
   if (!dbUser || !dbUser.organizationId) {
     redirect("/onboarding");
   }
 
-  return <AdminLayoutClient>{children}</AdminLayoutClient>;
+  return <AdminLayoutClient user={dbUser}>{children}</AdminLayoutClient>;
 }
