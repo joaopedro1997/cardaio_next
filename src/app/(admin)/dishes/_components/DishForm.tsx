@@ -17,17 +17,11 @@ type DishData = {
     categories?: number[];
     isVegan: boolean | null;
     isVegetarian: boolean | null;
-    showIngredients: boolean | null;
     ingredients: string | null;
-    showCalories: boolean | null;
     calories: number | null;
-    showAllergens: boolean | null;
     allergens: string | null;
-    showPortionSize: boolean | null;
     portionSize: string | null;
-    showSpiceLevel: boolean | null;
     spiceLevel: number | null;
-    showChefNotes: boolean | null;
     chefNotes: string | null;
     order: number | null;
 };
@@ -45,12 +39,6 @@ export default function DishForm({ categories, initialData, action = createDish 
     const [isActive, setIsActive] = useState(initialData?.active ?? true);
     const [isVegan, setIsVegan] = useState(initialData?.isVegan ?? false);
     const [isVegetarian, setIsVegetarian] = useState(initialData?.isVegetarian ?? false);
-    const [showIngredients, setShowIngredients] = useState(initialData?.showIngredients ?? false);
-    const [showCalories, setShowCalories] = useState(initialData?.showCalories ?? false);
-    const [showAllergens, setShowAllergens] = useState(initialData?.showAllergens ?? false);
-    const [showPortionSize, setShowPortionSize] = useState(initialData?.showPortionSize ?? false);
-    const [showSpiceLevel, setShowSpiceLevel] = useState(initialData?.showSpiceLevel ?? false);
-    const [showChefNotes, setShowChefNotes] = useState(initialData?.showChefNotes ?? false);
 
     // Price state management
     const [displayPrice, setDisplayPrice] = useState("");
@@ -108,7 +96,7 @@ export default function DishForm({ categories, initialData, action = createDish 
     );
 
     return (
-        <form action={formAction} className="bg-white p-6 rounded-xl shadow-sm dark:bg-gray-800 max-w-4xl mx-auto flex flex-col gap-6">
+        <form action={formAction} className="bg-white p-6 rounded-xl shadow-sm dark:bg-gray-800 mx-auto flex flex-col gap-6">
             {state?.error && (
                 <div className="p-3 text-sm text-red-500 bg-red-50 rounded-lg dark:bg-red-900/20 dark:text-red-400">
                     {state.error}
@@ -170,48 +158,34 @@ export default function DishForm({ categories, initialData, action = createDish 
             </Section>
 
             <Section title="Detalhes do Prato">
-                <div className="col-span-1 md:col-span-2 space-y-4">
-                    <div className="flex items-center gap-4">
-                        <div className="flex-1">
-                            <Label>Ingredientes</Label>
-                            <Input name="ingredients" placeholder="Lista de ingredientes" defaultValue={initialData?.ingredients || ''} />
-                        </div>
-                    </div>
+                <div>
+                    <Label>Ingredientes</Label>
+                    <Input name="ingredients" placeholder="Lista de ingredientes" defaultValue={initialData?.ingredients || ''} />
+                </div>
 
-                    <div className="flex items-center gap-4">
-                        <div className="flex-1">
-                            <Label>Calorias</Label>
-                            <Input name="calories" type="number" placeholder="Ex: 350" defaultValue={initialData?.calories?.toString() || ''} />
-                        </div>
-                    </div>
+                <div>
+                    <Label>Calorias</Label>
+                    <Input name="calories" type="number" placeholder="Ex: 350" defaultValue={initialData?.calories?.toString() || ''} />
+                </div>
 
-                    <div className="flex items-center gap-4">
-                        <div className="flex-1">
-                            <Label>Alergenos</Label>
-                            <Input name="allergens" placeholder="Ex: Glúten, Lactose" defaultValue={initialData?.allergens || ''} />
-                        </div>
-                    </div>
+                <div>
+                    <Label>Alergenos</Label>
+                    <Input name="allergens" placeholder="Ex: Glúten, Lactose" defaultValue={initialData?.allergens || ''} />
+                </div>
 
-                    <div className="flex items-center gap-4">
-                        <div className="flex-1">
-                            <Label>Tamanho da Porção</Label>
-                            <Input name="portionSize" placeholder="Ex: 300g, 2 Pessoas" defaultValue={initialData?.portionSize || ''} />
-                        </div>
-                    </div>
+                <div>
+                    <Label>Tamanho da Porção</Label>
+                    <Input name="portionSize" placeholder="Ex: 300g, 2 Pessoas" defaultValue={initialData?.portionSize || ''} />
+                </div>
 
-                    <div className="flex items-center gap-4">
-                        <div className="flex-1">
-                            <Label>Nível de Pimenta (0-5)</Label>
-                            <Input name="spiceLevel" type="number" min="0" max="5" placeholder="0" defaultValue={initialData?.spiceLevel?.toString() || ''} />
-                        </div>
-                    </div>
+                <div>
+                    <Label>Nível de Pimenta (0-5)</Label>
+                    <Input name="spiceLevel" type="number" min="0" max="5" placeholder="0" defaultValue={initialData?.spiceLevel?.toString() || ''} />
+                </div>
 
-                    <div className="flex items-center gap-4">
-                        <div className="flex-1">
-                            <Label>Notas do Chef</Label>
-                            <Input name="chefNotes" placeholder="Dicas ou observações especiais" defaultValue={initialData?.chefNotes || ''} />
-                        </div>
-                    </div>
+                <div>
+                    <Label>Notas do Chef</Label>
+                    <Input name="chefNotes" placeholder="Dicas ou observações especiais" defaultValue={initialData?.chefNotes || ''} />
                 </div>
             </Section>
 
