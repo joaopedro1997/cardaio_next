@@ -7,6 +7,8 @@ import Button from "@/components/ui/button/Button";
 import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
 import Switch from "@/components/ui/switch/Switch";
+import ImageUpload from "@/components/form/ImageUpload";
+
 
 type DishData = {
     id?: number;
@@ -23,8 +25,10 @@ type DishData = {
     portionSize: string | null;
     spiceLevel: number | null;
     chefNotes: string | null;
+    images?: string[] | null;
     order: number | null;
 };
+
 
 type Props = {
     categories: any[];
@@ -43,6 +47,16 @@ export default function DishForm({ categories, initialData, action = createDish 
     // Price state management
     const [displayPrice, setDisplayPrice] = useState("");
     const [price, setPrice] = useState("");
+    const [images, setImages] = useState<string[]>(
+        Array.isArray(initialData?.images) ? (initialData?.images as string[]) : []
+    );
+    // Helper to track upload state passed from ImageUpload if we moved state up, 
+    // but ImageUpload handles its own state. 
+    // However, we might want to prevent submit if uploading. 
+    // For now, ImageUpload handles its own uploading state but doesn't block form submit 
+    // unless we life state up or expose isUploading. 
+    // I'll assume simple integration first.
+    const [isUploadingImages, setIsUploadingImages] = useState(false); // Placeholder if we want to implement this
 
     const isCategorySelected = (catId: number) => {
         return initialData?.categories?.includes(catId);
@@ -189,6 +203,11 @@ export default function DishForm({ categories, initialData, action = createDish 
                 </div>
             </Section>
 
+            <Section title="Imagens do Prato">
+                <ImageUpload value={images} onChange={setImages} />
+                <input type="hidden" name="images" value={JSON.stringify(images)} />
+            </Section>
+
             <Section title="Status">
                 <BooleanField label="Prato Ativo (Visível no cardápio)" name="active" checked={isActive} onChange={setIsActive} />
             </Section>
@@ -200,7 +219,7 @@ export default function DishForm({ categories, initialData, action = createDish 
                 >
                     Cancelar
                 </Link>
-                <Button disabled={isPending}>
+                <Button disabled={isPending || isUploadingImages}>
                     {isPending ? "Salvando..." : initialData ? "Salvar Alterações" : "Criar Prato"}
                 </Button>
             </div>

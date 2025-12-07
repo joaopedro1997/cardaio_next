@@ -15,10 +15,10 @@ export default async function DishPage({ params }: Props) {
     if (!user || !user.organizationId) {
         redirect('/onboarding');
     }
-    
+
     const { id } = await params;
     const isNew = id === 'new';
-    
+
     // Fetch all categories for selection (needed for both create and edit)
     const categoriesList = await db.select().from(categories).where(eq(categories.organizationId, user.organizationId));
 
@@ -53,12 +53,13 @@ export default async function DishPage({ params }: Props) {
     const existingCategories = await db.select({ categoryId: dishCategories.categoryId })
         .from(dishCategories)
         .where(eq(dishCategories.dishId, dishId));
-    
+
     const categoryIds = existingCategories.map(c => c.categoryId);
 
     const initialData = {
         ...dish,
-        categories: categoryIds
+        categories: categoryIds,
+        images: dish.images as string[] | null | undefined
     };
 
     return (
