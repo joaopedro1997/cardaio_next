@@ -6,7 +6,7 @@ import Link from "next/link";
 import Button from "@/components/ui/button/Button";
 import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
-import Checkbox from "@/components/form/input/Checkbox";
+import Switch from "@/components/ui/switch/Switch";
 
 type DishData = {
     id?: number;
@@ -15,6 +15,21 @@ type DishData = {
     price: string | null;
     active: boolean | null;
     categories?: number[];
+    isVegan: boolean | null;
+    isVegetarian: boolean | null;
+    showIngredients: boolean | null;
+    ingredients: string | null;
+    showCalories: boolean | null;
+    calories: number | null;
+    showAllergens: boolean | null;
+    allergens: string | null;
+    showPortionSize: boolean | null;
+    portionSize: string | null;
+    showSpiceLevel: boolean | null;
+    spiceLevel: number | null;
+    showChefNotes: boolean | null;
+    chefNotes: string | null;
+    order: number | null;
 };
 
 type Props = {
@@ -25,7 +40,17 @@ type Props = {
 
 export default function DishForm({ categories, initialData, action = createDish }: Props) {
     const [state, formAction, isPending] = useActionState(action, null);
+
+    // Boolean states
     const [isActive, setIsActive] = useState(initialData?.active ?? true);
+    const [isVegan, setIsVegan] = useState(initialData?.isVegan ?? false);
+    const [isVegetarian, setIsVegetarian] = useState(initialData?.isVegetarian ?? false);
+    const [showIngredients, setShowIngredients] = useState(initialData?.showIngredients ?? false);
+    const [showCalories, setShowCalories] = useState(initialData?.showCalories ?? false);
+    const [showAllergens, setShowAllergens] = useState(initialData?.showAllergens ?? false);
+    const [showPortionSize, setShowPortionSize] = useState(initialData?.showPortionSize ?? false);
+    const [showSpiceLevel, setShowSpiceLevel] = useState(initialData?.showSpiceLevel ?? false);
+    const [showChefNotes, setShowChefNotes] = useState(initialData?.showChefNotes ?? false);
 
     // Price state management
     const [displayPrice, setDisplayPrice] = useState("");
@@ -47,8 +72,6 @@ export default function DishForm({ categories, initialData, action = createDish 
 
     const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let value = e.target.value;
-
-        // Keep only numbers
         value = value.replace(/\D/g, "");
 
         if (!value) {
@@ -58,7 +81,6 @@ export default function DishForm({ categories, initialData, action = createDish 
         }
 
         const floatValue = parseFloat(value) / 100;
-
         const formatted = new Intl.NumberFormat('pt-BR', {
             style: 'currency',
             currency: 'BRL'
@@ -68,43 +90,63 @@ export default function DishForm({ categories, initialData, action = createDish 
         setPrice(floatValue.toFixed(2));
     };
 
+    const Section = ({ title, children }: { title: string, children: React.ReactNode }) => (
+        <div className="space-y-4 pt-4 border-t border-gray-100 dark:border-gray-700 first:border-0 first:pt-0">
+            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">{title}</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {children}
+            </div>
+        </div>
+    );
+
+    const BooleanField = ({ label, name, checked, onChange }: { label: string, name: string, checked: boolean, onChange: (val: boolean) => void }) => (
+        <div className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+            <Label className="mb-0 cursor-pointer flex-1" onClick={() => onChange(!checked)}>{label}</Label>
+            <Switch checked={checked} onChange={onChange} />
+            <input type="hidden" name={name} value={checked ? "on" : "off"} />
+        </div>
+    );
+
     return (
-        <form action={formAction} className="bg-white p-6 rounded-xl shadow-sm dark:bg-gray-800 max-w mx-auto flex flex-col gap-4 ">
+        <form action={formAction} className="bg-white p-6 rounded-xl shadow-sm dark:bg-gray-800 max-w-4xl mx-auto flex flex-col gap-6">
             {state?.error && (
-                <div className="p-3 mb-4 text-sm text-red-500 bg-red-50 rounded-lg dark:bg-red-900/20 dark:text-red-400">
+                <div className="p-3 text-sm text-red-500 bg-red-50 rounded-lg dark:bg-red-900/20 dark:text-red-400">
                     {state.error}
                 </div>
             )}
 
             {initialData?.id && <input type="hidden" name="id" value={initialData.id} />}
 
-            <div className="grid grid-cols-2 gap-4">
-                <div>
-                    <Label>Nome do Prato</Label>
+            <Section title="Informações Básicas">
+                <div className="col-span-1 md:col-span-2">
+                    <Label>Nome do Prato*</Label>
                     <Input name="name" placeholder="Ex: Pizza Calabresa" defaultValue={initialData?.name} required />
                 </div>
 
                 <div>
                     <Label>Preço</Label>
-                    {/* Visible formatted input */}
                     <Input
                         value={displayPrice}
                         onChange={handlePriceChange}
                         placeholder="R$ 0,00"
-                        required
                     />
-                    {/* Hidden input with the actual decimal value for the server */}
                     <input type="hidden" name="price" value={price} />
                 </div>
 
-                <div className="col-span-2">
-                    <Label>Descrição</Label>
-                    <Input name="description" placeholder="Ingredientes, detalhes..." defaultValue={initialData?.description || ''} />
+                <div>
+                    <Label>Ordem de Exibição</Label>
+                    <Input name="order" type="number" placeholder="0" defaultValue={initialData?.order?.toString() ?? "0"} />
                 </div>
 
-                <div className="col-span-2">
-                    <Label>Categorias</Label>
-                    <div className="flex flex-wrap gap-3 mt-2 border border-gray-200 dark:border-gray-700 p-4 rounded-lg">
+                <div className="col-span-1 md:col-span-2">
+                    <Label>Descrição</Label>
+                    <Input name="description" placeholder="Uma breve descrição..." defaultValue={initialData?.description || ''} />
+                </div>
+            </Section>
+
+            <Section title="Categorias">
+                <div className="col-span-1 md:col-span-2">
+                    <div className="flex flex-wrap gap-3 border border-gray-200 dark:border-gray-700 p-4 rounded-lg bg-gray-50 dark:bg-gray-900/50">
                         {categories.map(cat => (
                             <label key={cat.id} className="inline-flex items-center gap-2 cursor-pointer select-none">
                                 <input
@@ -117,27 +159,76 @@ export default function DishForm({ categories, initialData, action = createDish 
                                 <span className="text-sm text-gray-700 dark:text-gray-300">{cat.name}</span>
                             </label>
                         ))}
-                        {categories.length === 0 && <span className="text-sm text-gray-500">Nenhuma categoria cadastrada. Crie categorias primeiro.</span>}
+                        {categories.length === 0 && <span className="text-sm text-gray-500">Nenhuma categoria cadastrada.</span>}
                     </div>
                 </div>
+            </Section>
 
-                <div className="col-span-2 flex items-center gap-3">
-                    <Checkbox checked={isActive} onChange={setIsActive} />
-                    <Label className="mb-0">Ativo</Label>
-                    <input type="hidden" name="active" value={isActive ? "on" : "off"} />
-                </div>
+            <Section title="Dietas e Restrições">
+                <BooleanField label="Vegano" name="isVegan" checked={isVegan} onChange={setIsVegan} />
+                <BooleanField label="Vegetariano" name="isVegetarian" checked={isVegetarian} onChange={setIsVegetarian} />
+            </Section>
 
-                <div className="col-span-2 flex items-center justify-end gap-3 mt-4">
-                    <Link
-                        href="/dishes"
-                        className="px-3 py-2 justify-center flex items-center text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700"
-                    >
-                        Cancelar
-                    </Link>
-                    <Button disabled={isPending} size="xs">
-                        {isPending ? "Salvando..." : initialData ? "Atualizar Prato" : "Salvar Prato"}
-                    </Button>
+            <Section title="Detalhes do Prato">
+                <div className="col-span-1 md:col-span-2 space-y-4">
+                    <div className="flex items-center gap-4">
+                        <div className="flex-1">
+                            <Label>Ingredientes</Label>
+                            <Input name="ingredients" placeholder="Lista de ingredientes" defaultValue={initialData?.ingredients || ''} />
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                        <div className="flex-1">
+                            <Label>Calorias</Label>
+                            <Input name="calories" type="number" placeholder="Ex: 350" defaultValue={initialData?.calories?.toString() || ''} />
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                        <div className="flex-1">
+                            <Label>Alergenos</Label>
+                            <Input name="allergens" placeholder="Ex: Glúten, Lactose" defaultValue={initialData?.allergens || ''} />
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                        <div className="flex-1">
+                            <Label>Tamanho da Porção</Label>
+                            <Input name="portionSize" placeholder="Ex: 300g, 2 Pessoas" defaultValue={initialData?.portionSize || ''} />
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                        <div className="flex-1">
+                            <Label>Nível de Pimenta (0-5)</Label>
+                            <Input name="spiceLevel" type="number" min="0" max="5" placeholder="0" defaultValue={initialData?.spiceLevel?.toString() || ''} />
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                        <div className="flex-1">
+                            <Label>Notas do Chef</Label>
+                            <Input name="chefNotes" placeholder="Dicas ou observações especiais" defaultValue={initialData?.chefNotes || ''} />
+                        </div>
+                    </div>
                 </div>
+            </Section>
+
+            <Section title="Status">
+                <BooleanField label="Prato Ativo (Visível no cardápio)" name="active" checked={isActive} onChange={setIsActive} />
+            </Section>
+
+            <div className="flex items-center justify-end gap-3 mt-8 pt-4 border-t border-gray-100 dark:border-gray-700">
+                <Link
+                    href="/dishes"
+                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700"
+                >
+                    Cancelar
+                </Link>
+                <Button disabled={isPending}>
+                    {isPending ? "Salvando..." : initialData ? "Salvar Alterações" : "Criar Prato"}
+                </Button>
             </div>
         </form>
     );

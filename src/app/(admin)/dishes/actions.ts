@@ -15,7 +15,32 @@ export async function createDish(prevState: any, formData: FormData) {
     const description = formData.get('description') as string;
     const price = formData.get('price') as string;
     const active = formData.get('active') === 'on';
-    
+
+    // New Boolean Fields
+    const isVegan = formData.get('isVegan') === 'on';
+    const isVegetarian = formData.get('isVegetarian') === 'on';
+    const showIngredients = formData.get('showIngredients') === 'on';
+    const showCalories = formData.get('showCalories') === 'on';
+    const showAllergens = formData.get('showAllergens') === 'on';
+    const showPortionSize = formData.get('showPortionSize') === 'on';
+    const showSpiceLevel = formData.get('showSpiceLevel') === 'on';
+    const showChefNotes = formData.get('showChefNotes') === 'on';
+
+    // New Text/Number Fields
+    const ingredients = formData.get('ingredients') as string;
+    const allergens = formData.get('allergens') as string;
+    const portionSize = formData.get('portionSize') as string;
+    const chefNotes = formData.get('chefNotes') as string;
+
+    const caloriesRaw = formData.get('calories');
+    const calories = caloriesRaw ? parseInt(caloriesRaw as string) : null;
+
+    const spiceLevelRaw = formData.get('spiceLevel');
+    const spiceLevel = spiceLevelRaw ? parseInt(spiceLevelRaw as string) : null;
+
+    const orderRaw = formData.get('order');
+    const order = orderRaw ? parseInt(orderRaw as string) : 0;
+
     const categoryIds = formData.getAll('categories').map(id => parseInt(id as string));
 
     if (!name) return { error: "Name is required" };
@@ -26,7 +51,23 @@ export async function createDish(prevState: any, formData: FormData) {
             description,
             price: price ? price.toString() : null,
             active,
-            organizationId: user.organizationId
+            organizationId: user.organizationId,
+            // New Fields
+            isVegan,
+            isVegetarian,
+            showIngredients,
+            ingredients,
+            showCalories,
+            calories,
+            showAllergens,
+            allergens,
+            showPortionSize,
+            portionSize,
+            showSpiceLevel,
+            spiceLevel,
+            showChefNotes,
+            chefNotes,
+            order,
         }).returning();
 
         if (categoryIds.length > 0) {
@@ -55,7 +96,32 @@ export async function updateDish(prevState: any, formData: FormData) {
     const description = formData.get('description') as string;
     const price = formData.get('price') as string;
     const active = formData.get('active') === 'on';
-    
+
+    // New Boolean Fields
+    const isVegan = formData.get('isVegan') === 'on';
+    const isVegetarian = formData.get('isVegetarian') === 'on';
+    const showIngredients = formData.get('showIngredients') === 'on';
+    const showCalories = formData.get('showCalories') === 'on';
+    const showAllergens = formData.get('showAllergens') === 'on';
+    const showPortionSize = formData.get('showPortionSize') === 'on';
+    const showSpiceLevel = formData.get('showSpiceLevel') === 'on';
+    const showChefNotes = formData.get('showChefNotes') === 'on';
+
+    // New Text/Number Fields
+    const ingredients = formData.get('ingredients') as string;
+    const allergens = formData.get('allergens') as string;
+    const portionSize = formData.get('portionSize') as string;
+    const chefNotes = formData.get('chefNotes') as string;
+
+    const caloriesRaw = formData.get('calories');
+    const calories = caloriesRaw ? parseInt(caloriesRaw as string) : null;
+
+    const spiceLevelRaw = formData.get('spiceLevel');
+    const spiceLevel = spiceLevelRaw ? parseInt(spiceLevelRaw as string) : null;
+
+    const orderRaw = formData.get('order');
+    const order = orderRaw ? parseInt(orderRaw as string) : 0;
+
     const categoryIds = formData.getAll('categories').map(id => parseInt(id as string));
 
     if (!id) return { error: "ID is required" };
@@ -68,6 +134,22 @@ export async function updateDish(prevState: any, formData: FormData) {
                 description,
                 price: price ? price.toString() : null,
                 active,
+                // New Fields
+                isVegan,
+                isVegetarian,
+                showIngredients,
+                ingredients,
+                showCalories,
+                calories,
+                showAllergens,
+                allergens,
+                showPortionSize,
+                portionSize,
+                showSpiceLevel,
+                spiceLevel,
+                showChefNotes,
+                chefNotes,
+                order,
             })
             .where(and(
                 eq(dishes.id, id),
