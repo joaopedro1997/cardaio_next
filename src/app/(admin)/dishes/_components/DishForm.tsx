@@ -78,17 +78,10 @@ export default function DishForm({ categories, initialData, action = createDish 
 
             {initialData?.id && <input type="hidden" name="id" value={initialData.id} />}
 
-
-
-            <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-2 gap-4">
                 <div>
                     <Label>Nome do Prato</Label>
                     <Input name="name" placeholder="Ex: Pizza Calabresa" defaultValue={initialData?.name} required />
-                </div>
-
-                <div>
-                    <Label>Descrição</Label>
-                    <Input name="description" placeholder="Ingredientes, detalhes..." defaultValue={initialData?.description || ''} />
                 </div>
 
                 <div>
@@ -104,7 +97,12 @@ export default function DishForm({ categories, initialData, action = createDish 
                     <input type="hidden" name="price" value={price} />
                 </div>
 
-                <div>
+                <div className="col-span-2">
+                    <Label>Descrição</Label>
+                    <Input name="description" placeholder="Ingredientes, detalhes..." defaultValue={initialData?.description || ''} />
+                </div>
+
+                <div className="col-span-2">
                     <Label>Categorias</Label>
                     <div className="flex flex-wrap gap-3 mt-2 border border-gray-200 dark:border-gray-700 p-4 rounded-lg">
                         {categories.map(cat => (
@@ -123,13 +121,13 @@ export default function DishForm({ categories, initialData, action = createDish 
                     </div>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="col-span-2 flex items-center gap-3">
                     <Checkbox checked={isActive} onChange={setIsActive} />
                     <Label className="mb-0">Ativo</Label>
                     <input type="hidden" name="active" value={isActive ? "on" : "off"} />
                 </div>
 
-                <div className="flex items-center justify-end gap-3 mt-4">
+                <div className="col-span-2 flex items-center justify-end gap-3 mt-4">
                     <Link
                         href="/dishes"
                         className="px-3 py-2 justify-center flex items-center text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700"
@@ -144,4 +142,3 @@ export default function DishForm({ categories, initialData, action = createDish 
         </form>
     );
 }
-
