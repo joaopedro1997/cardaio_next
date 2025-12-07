@@ -69,7 +69,7 @@ export default function DishForm({ categories, initialData, action = createDish 
     };
 
     return (
-        <form action={formAction} className="bg-white p-6 rounded-xl shadow-sm dark:bg-gray-800 max-w-4xl mx-auto">
+        <form action={formAction} className="bg-white p-6 rounded-xl shadow-sm dark:bg-gray-800 max-w mx-auto flex flex-col gap-4 ">
             {state?.error && (
                 <div className="p-3 mb-4 text-sm text-red-500 bg-red-50 rounded-lg dark:bg-red-900/20 dark:text-red-400">
                     {state.error}
@@ -78,7 +78,9 @@ export default function DishForm({ categories, initialData, action = createDish 
 
             {initialData?.id && <input type="hidden" name="id" value={initialData.id} />}
 
-            <div className="grid grid-cols-1 gap-6">
+
+
+            <div className="flex flex-col gap-4">
                 <div>
                     <Label>Nome do Prato</Label>
                     <Input name="name" placeholder="Ex: Pizza Calabresa" defaultValue={initialData?.name} required />
